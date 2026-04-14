@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --border: #2a2a3a;
+    --border2: #3a3a55;
+    --accent: #7c3aed;
+    --accent2: #a855f7;
+    --accent3: #c084fc;
+    --green: #22c55e;
+    --blue: #3b82f6;
+    --orange: #f97316;
+    --red: #ef4444;
+    --text: #f0f0f8;
+    --text2: #a0a0c0;
+    --text3: #606080;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === HEADER === */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 800;
+    color: white;
+    font-family: var(--mono);
+    letter-spacing: -1px;
+    box-shadow: 0 0 20px rgba(124,58,237,0.4);
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .logo-name {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    color: var(--accent3);
+    font-family: var(--mono);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .header-pills {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .pill {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-family: var(--mono);
+    border: 1px solid;
+  }
+
+  .pill-green { color: var(--green); border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.07); }
+  .pill-blue { color: #60a5fa; border-color: rgba(59,130,246,0.3); background: rgba(59,130,246,0.07); }
+  .pill-purple { color: var(--accent3); border-color: rgba(168,85,247,0.3); background: rgba(168,85,247,0.07); }
+
+  .header-model {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text2);
+    background: var(--bg2);
+    cursor: pointer;
+  }
+
+  .model-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* === MAIN LAYOUT === */
+  .workspace {
+    display: grid;
+    grid-template-columns: 260px 1fr 340px;
+    height: calc(100vh - 57px);
+  }
+
+  /* === SIDEBAR === */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    background: var(--bg2);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-section {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .history-item {
+    padding: 9px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+    margin-bottom: 4px;
+  }
+
+  .history-item:hover { background: var(--bg3); border-color: var(--border); }
+  .history-item.active { background: rgba(124,58,237,0.12); border-color: rgba(124,58,237,0.4); }
+
+  .history-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .history-meta {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--text3);
+  }
+
+  .new-chat-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.15s;
+  }
+
+  .new-chat-btn:hover { background: var(--accent2); transform: translateY(-1px); }
+
+  .sidebar-stats {
+    padding: 16px;
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+  }
+
+  .stat-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .stat-label { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+  .stat-value { font-size: 12px; font-weight: 700; font-family: var(--mono); }
+  .stat-green { color: var(--green); }
+  .stat-purple { color: var(--accent3); }
+  .stat-blue { color: #60a5fa; }
+
+  /* === MAIN EDITOR === */
+  .editor-area {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .editor-tabs {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    gap: 0;
+    background: var(--bg2);
+  }
+
+  .tab {
+    padding: 10px 16px;
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text3);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .tab:hover { color: var(--text2); }
+  .tab.active { color: var(--accent3); border-bottom-color: var(--accent); }
+
+  .tab-icon { margin-right: 6px; }
+
+  .editor-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* == PROMPT VIEW == */
+  .prompt-view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .prompt-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .prompt-header h2 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .prompt-subtext {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  .system-prompt-area {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .system-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--accent3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .system-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text2);
+    font-family: var(--mono);
+    font-size: 12px;
+    resize: none;
+    line-height: 1.6;
+    min-height: 60px;
+  }
+
+  .main-prompt-area {
+    flex: 1;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color 0.2s;
+  }
+
+  .main-prompt-area:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(124,58,237,0.3);
+  }
+
+  .main-prompt-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    resize: none;
+    line-height: 1.7;
+    min-height: 120px;
+  }
+
+  .main-prompt-input::placeholder { color: var(--text3); }
+
+  .prompt-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .prompt-tools {
+    display: flex;
+    gap: 8px;
+  }
+
+  .tool-btn {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: var(--mono);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text3);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .tool-btn:hover { border-color: var(--border2); color: var(--text2); background: var(--bg3); }
+
+  .send-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 20px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .send-btn:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(124,58,237,0.4); }
+  .send-btn:active { transform: scale(0.97); }
+  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  /* == CODE VIEW == */
+  .code-view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .code-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .code-lang-badge {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: var(--mono);
+    background: rgba(124,58,237,0.15);
+    color: var(--accent3);
+    border: 1px solid rgba(124,58,237,0.3);
+  }
+
+  .code-actions { display: flex; gap: 6px; }
+
+  .code-action-btn {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: var(--mono);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .code-action-btn:hover { background: var(--bg3); border-color: var(--border2); }
+
+  .code-editor {
+    flex: 1;
+    overflow: auto;
+    padding: 16px;
+  }
+
+  .code-content {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* Token colors */
+  .kw { color: #c084fc; }
+  .fn { color: #60a5fa; }
+  .str { color: #86efac; }
+  .num { color: #fb923c; }
+  .cmt { color: var(--text3); font-style: italic; }
+  .cls { color: #fbbf24; }
+
+  /* == PREVIEW VIEW == */
+  .preview-view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .preview-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .browser-dots { display: flex; gap: 5px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ef4444; }
+  .dot-y { background: #f59e0b; }
+  .dot-g { background: #22c55e; }
+
+  .preview-url {
+    flex: 1;
+    padding: 4px 10px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .preview-frame {
+    flex: 1;
+    background: white;
+    border: none;
+    width: 100%;
+  }
+
+  /* == RIGHT PANEL == */
+  .right-panel {
+    border-left: 1px solid var(--border);
+    background: var(--bg2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .panel-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .panel-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text3);
+    cursor: pointer;
+    transition: all 0.15s;
+    border-bottom: 2px solid transparent;
+  }
+
+  .panel-tab:hover { color: var(--text2); }
+  .panel-tab.active { color: var(--accent3); border-bottom-color: var(--accent); }
+
+  .panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+  }
+
+  /* Conversation */
+  .message {
+    margin-bottom: 16px;
+    animation: fadeUp 0.3s ease;
+  }
+
+  @keyframes fadeUp { from{ opacity:0; transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  .msg-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .msg-avatar {
+    width: 24px; height: 24px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--mono);
+  }
+
+  .avatar-user { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
+  .avatar-ai { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; }
+
+  .msg-name { font-size: 11px; font-weight: 700; color: var(--text2); }
+  .msg-time { font-size: 10px; color: var(--text3); font-family: var(--mono); margin-left: auto; }
+
+  .msg-body {
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.6;
+    border: 1px solid;
+  }
+
+  .msg-user .msg-body { background: var(--bg3); border-color: var(--border); color: var(--text); }
+  .msg-ai .msg-body { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.25); color: var(--text2); }
+
+  .msg-code-block {
+    margin-top: 8px;
+    background: var(--bg);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent3);
+    border: 1px solid var(--border);
+  }
+
+  /* Loading state */
+  .thinking {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 12px;
+    background: rgba(124,58,237,0.08);
+    border: 1px solid rgba(124,58,237,0.25);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--accent3);
+    font-family: var(--mono);
+  }
+
+  .thinking-dots { display: flex; gap: 3px; }
+  .thinking-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent3); animation: bounce 1.4s infinite; }
+  .thinking-dot:nth-child(2) { animation-delay: 0.2s; }
+  .thinking-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,80%,100%{transform:scale(0.8);opacity:0.4} 40%{transform:scale(1.2);opacity:1} }
+
+  /* Inspector */
+  .inspect-section { margin-bottom: 20px; }
+  .inspect-title { font-size: 10px; font-family: var(--mono); color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  
+  .inspect-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .inspect-key { color: var(--text3); font-family: var(--mono); }
+  .inspect-val { color: var(--text); font-weight: 600; font-family: var(--mono); }
+  .inspect-val-green { color: var(--green); }
+  .inspect-val-purple { color: var(--accent3); }
+  .inspect-val-blue { color: #60a5fa; }
+
+  .token-bar {
+    height: 4px;
+    background: var(--bg3);
+    border-radius: 2px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+
+  .token-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    transition: width 0.5s ease;
+  }
+
+  /* Edit view */
+  .edit-view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .edit-instruction {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+  }
+
+  .edit-instruction-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--accent3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .edit-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    resize: none;
+    line-height: 1.6;
+    min-height: 80px;
+  }
+
+  .diff-preview {
+    flex: 1;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: auto;
+    padding: 12px;
+  }
+
+  .diff-line { font-family: var(--mono); font-size: 12px; line-height: 1.8; padding: 1px 8px; border-radius: 2px; }
+  .diff-add { background: rgba(34,197,94,0.08); color: #86efac; }
+  .diff-add::before { content: "+ "; color: var(--green); }
+  .diff-rem { background: rgba(239,68,68,0.08); color: #fca5a5; }
+  .diff-rem::before { content: "- "; color: var(--red); }
+  .diff-ctx { color: var(--text3); }
+  .diff-ctx::before { content: "  "; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+  /* Loading overlay */
+  .loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,10,15,0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 50;
+    backdrop-filter: blur(4px);
+    border-radius: 8px;
+  }
+
+  .loading-ring {
+    width: 40px; height: 40px;
+    border: 3px solid var(--border2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  .loading-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    margin-top: -10px;
+  }
+
+  /* Status bar */
+  .statusbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 4px 16px;
+    background: var(--accent);
+    font-size: 11px;
+    font-family: var(--mono);
+    color: rgba(255,255,255,0.8);
+  }
+
+  .statusbar-item { display: flex; align-items: center; gap: 5px; }
+  .statusbar-sep { opacity: 0.3; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text);
+    z-index: 999;
+    animation: slideIn 0.3s ease;
+    display: none;
+  }
+
+  .toast.show { display: flex; align-items: center; gap: 8px; }
+  @keyframes slideIn { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+  /* Templates */
+  .template-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .template-card {
+    padding: 10px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .template-card:hover { border-color: var(--accent); background: rgba(124,58,237,0.08); }
+  .template-icon { font-size: 18px; margin-bottom: 4px; }
+  .template-name { font-size: 11px; font-weight: 700; color: var(--text); }
+  .template-desc { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+  .hidden { display: none !important; }
+
+  /* Settings */
+  .settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .settings-label { font-size: 12px; color: var(--text2); }
+  .settings-sub { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+  .toggle {
+    width: 36px; height: 20px;
+    background: var(--border2);
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .toggle.on { background: var(--accent); }
+  .toggle-thumb {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    background: white;
+    border-radius: 50%;
+    transition: left 0.2s;
+  }
+  .toggle.on .toggle-thumb { left: 18px; }
+
+  .range-input { width: 100%; accent-color: var(--accent); }
+
+  /* NOTIFICATION banner */
+  .api-banner {
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.4);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--accent3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .error-banner {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: #fca5a5;
+    margin-bottom: 8px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">P</div>
+    <div class="logo-text">
+      <span class="logo-name">PedusAgent</span>
+      <span class="logo-sub">by PedusCompany · Code AI</span>
+    </div>
+  </div>
+  <div class="header-pills">
+    <span class="pill pill-green">● Online</span>
+    <span class="pill pill-blue">Qwen3-Coder</span>
+    <span class="pill pill-purple" id="req-count">0 requests</span>
+  </div>
+  <div class="header-model" onclick="switchPanel('settings')">
+    <div class="model-dot"></div>
+    <span>Qwen3-235B-Coder</span>
+    <span style="color:var(--text3)">▾</span>
+  </div>
+</div>
+
+<!-- WORKSPACE -->
+<div class="workspace">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <button class="new-chat-btn" onclick="newSession()">
+        <span>+</span> Nueva sesión
+      </button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Historial</div>
+      <div id="history-list">
+        <div class="history-item active" onclick="loadHistory(0)">
+          <div class="history-title">Sesión actual</div>
+          <div class="history-meta">ahora · 0 msgs</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Plantillas</div>
+      <div class="template-grid">
+        <div class="template-card" onclick="useTemplate('api')">
+          <div class="template-icon">🔌</div>
+          <div class="template-name">REST API</div>
+          <div class="template-desc">Flask / FastAPI</div>
+        </div>
+        <div class="template-card" onclick="useTemplate('react')">
+          <div class="template-icon">⚛️</div>
+          <div class="template-name">React App</div>
+          <div class="template-desc">Component</div>
+        </div>
+        <div class="template-card" onclick="useTemplate('sql')">
+          <div class="template-icon">🗄️</div>
+          <div class="template-name">SQL Schema</div>
+          <div class="template-desc">PostgreSQL</div>
+        </div>
+        <div class="template-card" onclick="useTemplate('cli')">
+          <div class="template-icon">🖥️</div>
+          <div class="template-name">CLI Tool</div>
+          <div class="template-desc">Python</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-stats">
+      <div class="sidebar-label">Estadísticas</div>
+      <div class="stat-row">
+        <span class="stat-label">tokens usados</span>
+        <span class="stat-value stat-purple" id="stat-tokens">0</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">líneas generadas</span>
+        <span class="stat-value stat-green" id="stat-lines">0</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">archivos creados</span>
+        <span class="stat-value stat-blue" id="stat-files">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDITOR -->
+  <div class="editor-area">
+    <div class="editor-tabs">
+      <div class="tab active" onclick="switchTab('prompt')" id="tab-prompt">✏️ Prompt</div>
+      <div class="tab" onclick="switchTab('code')" id="tab-code">{'</>'}  Código</div>
+      <div class="tab" onclick="switchTab('edit')" id="tab-edit">✂️ Editar</div>
+      <div class="tab" onclick="switchTab('preview')" id="tab-preview">🖥️ Preview</div>
+    </div>
+    <div class="editor-content">
+
+      <!-- PROMPT VIEW -->
+      <div id="view-prompt" class="prompt-view">
+        <div>
+          <div class="prompt-header">
+            <h2>Nuevo prompt</h2>
+          </div>
+          <p class="prompt-subtext">Describe el código que quieres generar</p>
+        </div>
+
+        <div class="api-banner">
+          ⚡ Conectado a NVIDIA NIM · Qwen3-235B-A22B · Coder Edition
+        </div>
+
+        <div class="system-prompt-area">
+          <div class="system-label">System Prompt</div>
+          <textarea class="system-input" id="system-prompt" rows="3">Eres PedusAgent, un experto agente de código desarrollado por PedusCompany. Genera código limpio, moderno y bien documentado. Responde siempre con código funcional.</textarea>
+        </div>
+
+        <div class="main-prompt-area">
+          <textarea class="main-prompt-input" id="main-prompt" placeholder="Describe qué quieres construir...
+
+Ejemplo: Crea una API REST en Python con FastAPI que gestione usuarios con autenticación JWT, base de datos SQLite y operaciones CRUD completas."></textarea>
+          <div class="prompt-actions">
+            <div class="prompt-tools">
+              <button class="tool-btn" onclick="insertSnippet('python')">Py</button>
+              <button class="tool-btn" onclick="insertSnippet('js')">JS</button>
+              <button class="tool-btn" onclick="insertSnippet('sql')">SQL</button>
+              <button class="tool-btn" onclick="insertSnippet('ts')">TS</button>
+              <button class="tool-btn" onclick="clearPrompt()">Limpiar</button>
+            </div>
+            <button class="send-btn" id="send-btn" onclick="sendPromptToAPI()">
+              <span>⚡</span> Generar código
+            </button>
+          </div>
+        </div>
+        <div class="error-banner" id="error-banner"></div>
+      </div>
+
+      <!-- CODE VIEW -->
+      <div id="view-code" class="code-view hidden">
+        <div class="code-toolbar">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="code-lang-badge" id="code-lang">Python</span>
+            <span style="font-size:12px;color:var(--text3);font-family:var(--mono)" id="code-filename">output.py</span>
+          </div>
+          <div class="code-actions">
+            <button class="code-action-btn" onclick="copyCode()">📋 Copiar</button>
+            <button class="code-action-btn" onclick="downloadCode()">⬇️ Descargar</button>
+            <button class="code-action-btn" onclick="switchTab('edit')">✂️ Editar</button>
+            <button class="code-action-btn" onclick="switchTab('preview')">🖥️ Preview</button>
+          </div>
+        </div>
+        <div class="code-editor">
+          <pre class="code-content" id="code-display">
+<span class="cmt"># PedusAgent · Código generado aparecerá aquí</span>
+<span class="cmt"># Escribe un prompt y pulsa ⚡ Generar código</span>
+
+<span class="kw">def</span> <span class="fn">pedus_ready</span>():
+    <span class="kw">return</span> <span class="str">"Listo para generar código increíble"</span>
+          </pre>
+        </div>
+      </div>
+
+      <!-- EDIT VIEW -->
+      <div id="view-edit" class="edit-view hidden">
+        <div class="edit-instruction">
+          <div class="edit-instruction-label">Instrucción de edición</div>
+          <textarea class="edit-textarea" id="edit-instruction" placeholder="Describe qué quieres cambiar del código... 
+
+Ejemplo: Añade manejo de errores, refactoriza la función principal, añade comentarios en español..."></textarea>
+          <div style="display:flex;justify-content:flex-end;margin-top:10px;">
+            <button class="send-btn" onclick="editCode()">⚡ Aplicar edición</button>
+          </div>
+        </div>
+        <div class="edit-instruction" style="background:var(--bg3);">
+          <div class="edit-instruction-label">Vista diff</div>
+          <div class="diff-preview" id="diff-view">
+            <div class="diff-line diff-ctx">// Aquí verás los cambios del código</div>
+            <div class="diff-line diff-ctx">// El diff aparecerá después de editar</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREVIEW VIEW -->
+      <div id="view-preview" class="preview-view hidden">
+        <div class="preview-toolbar">
+          <div class="browser-dots">
+            <div class="dot dot-r"></div>
+            <div class="dot dot-y"></div>
+            <div class="dot dot-g"></div>
+          </div>
+          <div class="preview-url" id="preview-url">about:blank</div>
+          <button class="code-action-btn" onclick="refreshPreview()">↺ Refresh</button>
+        </div>
+        <iframe class="preview-frame" id="preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+      </div>
+
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="statusbar">
+      <div class="statusbar-item">
+        <span>PedusAgent v1.0.0</span>
+      </div>
+      <span class="statusbar-sep">|</span>
+      <div class="statusbar-item" id="status-lang">
+        <span>Python</span>
+      </div>
+      <span class="statusbar-sep">|</span>
+      <div class="statusbar-item" id="status-chars">
+        <span>0 chars</span>
+      </div>
+      <span class="statusbar-sep">|</span>
+      <div class="statusbar-item">
+        <span style="color:rgba(255,255,255,0.5)">PedusCompany © 2025</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="panel-tabs">
+      <div class="panel-tab active" onclick="switchPanel('chat')" id="ptab-chat">Chat</div>
+      <div class="panel-tab" onclick="switchPanel('inspector')" id="ptab-inspector">Inspector</div>
+      <div class="panel-tab" onclick="switchPanel('settings')" id="ptab-settings">Config</div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="panel-content" id="panel-chat">
+      <div id="messages-container">
+        <div class="message msg-ai">
+          <div class="msg-header">
+            <div class="msg-avatar avatar-ai">P</div>
+            <span class="msg-name">PedusAgent</span>
+            <span class="msg-time">ahora</span>
+          </div>
+          <div class="msg-body">
+            ¡Hola! Soy PedusAgent, tu super agente de código. Describe qué quieres construir y lo generaré al instante usando Qwen3 Coder. 🚀
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSPECTOR -->
+    <div class="panel-content hidden" id="panel-inspector">
+      <div class="inspect-section">
+        <div class="inspect-title">Modelo</div>
+        <div class="inspect-row">
+          <span class="inspect-key">nombre</span>
+          <span class="inspect-val inspect-val-purple">Qwen3-235B</span>
+        </div>
+        <div class="inspect-row">
+          <span class="inspect-key">provider</span>
+          <span class="inspect-val">NVIDIA NIM</span>
+        </div>
+        <div class="inspect-row">
+          <span class="inspect-key">estado</span>
+          <span class="inspect-val inspect-val-green">● activo</span>
+        </div>
+        <div class="inspect-row">
+          <span class="inspect-key">contexto</span>
+          <span class="inspect-val">128k tokens</span>
+        </div>
+      </div>
+      <div class="inspect-section">
+        <div class="inspect-title">Sesión actual</div>
+        <div class="inspect-row">
+          <span class="inspect-key">requests</span>
+          <span class="inspect-val inspect-val-blue" id="ins-requests">0</span>
+        </div>
+        <div class="inspect-row">
+          <span class="inspect-key">tokens usados</span>
+          <span class="inspect-val inspect-val-purple" id="ins-tokens">0</span>
+        </div>
+        <div class="inspect-row">
+          <span class="inspect-key">líneas código</span>
+          <span class="inspect-val inspect-val-green" id="ins-lines">0</span>
+        </div>
+        <div class="inspect-row">
+          <span class="inspect-key">lenguaje</span>
+          <span class="inspect-val" id="ins-lang">—</span>
+        </div>
+      </div>
+      <div class="inspect-section">
+        <div class="inspect-title">Uso de tokens</div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;">
+          <span id="tok-used">0</span>
+          <span>/ 128,000</span>
+        </div>
+        <div class="token-bar">
+          <div class="token-fill" id="tok-bar" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="inspect-section">
+        <div class="inspect-title">Parámetros activos</div>
+        <div class="inspect-row">
+          <span class="inspect-key">temperature</span>
+          <span class="inspect-val" id="ins-temp">0.6</span>
+        </div>
+        <div class="inspect-row">
+          <span class="inspect-key">max_tokens</span>
+          <span class="inspect-val" id="ins-max">4096</span>
+        </div>
+        <div class="inspect-row">
+          <span class="inspect-key">top_p</span>
+          <span class="inspect-val">1.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="panel-content hidden" id="panel-settings">
+      <div class="inspect-title" style="margin-bottom:16px">Configuración del modelo</div>
+
+      <div class="settings-row">
+        <div>
+          <div class="settings-label">Temperature</div>
+          <div class="settings-sub" id="temp-val">0.6 · balance creatividad/precisión</div>
+        </div>
+      </div>
+      <input type="range" class="range-input" min="0" max="10" value="6" id="temp-slider" oninput="updateTemp(this.value)" style="width:100%;margin:8px 0 16px;">
+
+      <div class="settings-row">
+        <div>
+          <div class="settings-label">Max tokens output</div>
+          <div class="settings-sub" id="maxtok-val">4096 tokens</div>
+        </div>
+      </div>
+      <input type="range" class="range-input" min="512" max="8192" step="512" value="4096" id="maxtok-slider" oninput="updateMaxTok(this.value)" style="width:100%;margin:8px 0 16px;">
+
+      <div class="settings-row">
+        <div>
+          <div class="settings-label">Modo streaming</div>
+          <div class="settings-sub">Respuesta en tiempo real</div>
+        </div>
+        <div class="toggle on" id="toggle-stream" onclick="toggleSetting('stream')">
+          <div class="toggle-thumb"></div>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div>
+          <div class="settings-label">Auto preview</div>
+          <div class="settings-sub">Preview tras cada generación</div>
+        </div>
+        <div class="toggle" id="toggle-preview" onclick="toggleSetting('preview')">
+          <div class="toggle-thumb"></div>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div>
+          <div class="settings-label">Comentarios en código</div>
+          <div class="settings-sub">Incluir documentación inline</div>
+        </div>
+        <div class="toggle on" id="toggle-comments" onclick="toggleSetting('comments')">
+          <div class="toggle-thumb"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;">
+        <div class="inspect-title" style="margin-bottom:12px">Lenguaje preferido</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <div class="template-card" onclick="setLang('python')" id="lang-python" style="border-color:var(--accent)">
+            <div class="template-icon">🐍</div>
+            <div class="template-name">Python</div>
+          </div>
+          <div class="template-card" onclick="setLang('javascript')">
+            <div class="template-icon">🟡</div>
+            <div class="template-name">JavaScript</div>
+          </div>
+          <div class="template-card" onclick="setLang('typescript')">
+            <div class="template-icon">🔷</div>
+            <div class="template-name">TypeScript</div>
+          </div>
+          <div class="template-card" onclick="setLang('rust')">
+            <div class="template-icon">🦀</div>
+            <div class="template-name">Rust</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API_KEY = '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';
+const API_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
+const MODEL   = 'qwen/qwen3-235b-a22b';
+
+let currentCode = '';
+let totalTokens = 0;
+let totalLines  = 0;
+let totalFiles  = 0;
+let reqCount    = 0;
+let settings = { temperature: 0.6, max_tokens: 4096, stream: true, preview: false, comments: true, lang: 'python' };
+let histories = [];
+
+// TAB SWITCHER
+function switchTab(tab) {
+  ['prompt','code','edit','preview'].forEach(t => {
+    document.getElementById('view-'+t).classList.add('hidden');
+    document.getElementById('tab-'+t).classList.remove('active');
+  });
+  document.getElementById('view-'+tab).classList.remove('hidden');
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab === 'preview' && currentCode) refreshPreview();
+}
+
+function switchPanel(p) {
+  ['chat','inspector','settings'].forEach(x => {
+    document.getElementById('panel-'+x).classList.add('hidden');
+    document.getElementById('ptab-'+x).classList.remove('active');
+  });
+  document.getElementById('panel-'+p).classList.remove('hidden');
+  document.getElementById('ptab-'+p).classList.add('active');
+}
+
+// SEND PROMPT
+async function sendPromptToAPI() {
+  const prompt = document.getElementById('main-prompt').value.trim();
+  if(!prompt) { showToast('⚠️ Escribe un prompt primero'); return; }
+
+  const sys = document.getElementById('system-prompt').value;
+  const btn = document.getElementById('send-btn');
+  const errBanner = document.getElementById('error-banner');
+  errBanner.style.display = 'none';
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="loading-ring" style="width:16px;height:16px;border-width:2px;margin:0"></div> Generando...';
+
+  addMessage('user', prompt);
+
+  const thinkingId = addThinking();
+
+  const messages = [
+    { role: 'system', content: sys + (settings.comments ? ' Incluye comentarios explicativos en el código.' : '') },
+    { role: 'user', content: prompt }
+  ];
+
+  try {
+    const resp = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
+      body: JSON.stringify({ model: MODEL, messages, max_tokens: settings.max_tokens, temperature: settings.temperature, top_p: 1 })
+    });
+
+    if(!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    const text = data.choices[0].message.content;
+    const usage = data.usage || {};
+
+    removeThinking(thinkingId);
+    addMessage('ai', text);
+
+    currentCode = extractCode(text);
+    displayCode(currentCode, detectLang(prompt));
+
+    const toks = usage.total_tokens || estimateTokens(text);
+    const lines = currentCode.split('\n').length;
+
+    totalTokens += toks;
+    totalLines  += lines;
+    totalFiles  += 1;
+    reqCount    += 1;
+
+    updateStats();
+    showToast('✅ Código generado · ' + lines + ' líneas');
+    switchTab('code');
+
+    if(settings.preview) setTimeout(refreshPreview, 500);
+
+  } catch(e) {
+    removeThinking(thinkingId);
+    errBanner.textContent = '❌ Error: ' + e.message;
+    errBanner.style.display = 'block';
+    addMessage('ai', '❌ Error al conectar con la API: ' + e.message);
+    showToast('❌ Error: ' + e.message);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<span>⚡</span> Generar código';
+}
+
+// EDIT CODE
+async function editCode() {
+  const instruction = document.getElementById('edit-instruction').value.trim();
+  if(!instruction) { showToast('⚠️ Escribe una instrucción de edición'); return; }
+  if(!currentCode) { showToast('⚠️ No hay código para editar'); return; }
+
+  const errBanner = document.getElementById('error-banner');
+  errBanner.style.display = 'none';
+
+  showToast('⚡ Aplicando edición...');
+
+  const messages = [
+    { role: 'system', content: 'Eres un editor de código experto. Modifica el código según la instrucción y devuelve SOLO el código modificado completo.' },
+    { role: 'user', content: `Código actual:\n\`\`\`\n${currentCode}\n\`\`\`\n\nInstrucción: ${instruction}` }
+  ];
+
+  try {
+    const resp = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
+      body: JSON.stringify({ model: MODEL, messages, max_tokens: settings.max_tokens, temperature: 0.3 })
+    });
+
+    if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+    const data = await resp.json();
+    const text = data.choices[0].message.content;
+    const newCode = extractCode(text);
+
+    showDiff(currentCode, newCode);
+    currentCode = newCode;
+    displayCode(currentCode, 'Python');
+    reqCount++;
+    updateStats();
+    showToast('✅ Edición aplicada');
+
+  } catch(e) {
+    showToast('❌ Error: ' + e.message);
+  }
+}
+
+// HELPERS
+function extractCode(text) {
+  const m = text.match(/```(?:\w+)?\n?([\s\S]*?)```/);
+  return m ? m[1].trim() : text.trim();
+}
+
+function detectLang(prompt) {
+  const p = prompt.toLowerCase();
+  if(p.includes('python') || p.includes('flask') || p.includes('fastapi') || p.includes('django')) return 'Python';
+  if(p.includes('javascript') || p.includes('node') || p.includes('react') || p.includes('vue')) return 'JavaScript';
+  if(p.includes('typescript')) return 'TypeScript';
+  if(p.includes('rust')) return 'Rust';
+  if(p.includes('sql') || p.includes('postgres') || p.includes('mysql')) return 'SQL';
+  if(p.includes('html') || p.includes('css')) return 'HTML';
+  return settings.lang.charAt(0).toUpperCase() + settings.lang.slice(1);
+}
+
+function estimateTokens(text) { return Math.floor(text.split(/\s+/).length * 1.3); }
+
+function displayCode(code, lang) {
+  const display = document.getElementById('code-display');
+  display.innerHTML = syntaxHighlight(code, lang);
+  document.getElementById('code-lang').textContent = lang;
+  document.getElementById('code-filename').textContent = 'output.' + langExt(lang);
+  document.getElementById('status-lang').innerHTML = '<span>' + lang + '</span>';
+  document.getElementById('status-chars').innerHTML = '<span>' + code.length + ' chars</span>';
+  document.getElementById('ins-lang').textContent = lang;
+  document.getElementById('ins-lines').textContent = code.split('\n').length;
+}
+
+function langExt(lang) {
+  const m = { Python:'py', JavaScript:'js', TypeScript:'ts', Rust:'rs', SQL:'sql', HTML:'html' };
+  return m[lang] || 'txt';
+}
+
+function syntaxHighlight(code, lang) {
+  let h = code
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/(#.*$)/gm, '<span class="cmt">$1</span>')
+    .replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)/g, '<span class="str">$1</span>')
+    .replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>')
+    .replace(/\b(def|class|return|import|from|if|else|elif|for|while|try|except|with|as|in|not|and|or|True|False|None|async|await|yield|lambda|pass|break|continue|raise|global|nonlocal|const|let|var|function|=>|export|default|interface|type|extends|implements|pub|fn|use|mod|struct|enum|impl|trait|match|where|async|mut|ref|self|Self)\b/g, '<span class="kw">$1</span>')
+    .replace(/\b([A-Z][a-zA-Z0-9]+)(?=\s*[\(:])/g, '<span class="cls">$1</span>')
+    .replace(/\b([a-z_][a-zA-Z0-9_]*)(?=\s*\()/g, '<span class="fn">$1</span>');
+  return h;
+}
+
+function showDiff(oldCode, newCode) {
+  const oldLines = oldCode.split('\n');
+  const newLines = newCode.split('\n');
+  const diffView = document.getElementById('diff-view');
+  let html = '';
+
+  const maxLen = Math.max(oldLines.length, newLines.length);
+  for(let i=0; i<Math.min(maxLen,40); i++) {
+    const o = oldLines[i]; const n = newLines[i];
+    if(o !== n) {
+      if(o !== undefined) html += `<div class="diff-line diff-rem">${escHtml(o)}</div>`;
+      if(n !== undefined) html += `<div class="diff-line diff-add">${escHtml(n)}</div>`;
+    } else if(n !== undefined) {
+      html += `<div class="diff-line diff-ctx">${escHtml(n)}</div>`;
+    }
+  }
+  diffView.innerHTML = html || '<div class="diff-line diff-ctx">// Sin cambios detectados</div>';
+}
+
+function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function addMessage(role, text) {
+  const container = document.getElementById('messages-container');
+  const div = document.createElement('div');
+  div.className = `message msg-${role === 'user' ? 'user' : 'ai'}`;
+  const isUser = role === 'user';
+  const shortText = text.length > 200 ? text.substring(0,200) + '...' : text;
+  const time = new Date().toLocaleTimeString('es', {hour:'2-digit',minute:'2-digit'});
+  div.innerHTML = `
+    <div class="msg-header">
+      <div class="msg-avatar ${isUser ? 'avatar-user' : 'avatar-ai'}">${isUser ? 'U' : 'P'}</div>
+      <span class="msg-name">${isUser ? 'Tú' : 'PedusAgent'}</span>
+      <span class="msg-time">${time}</span>
+    </div>
+    <div class="msg-body">${escHtml(shortText)}</div>
+  `;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+let thinkingCounter = 0;
+function addThinking() {
+  const id = 'thinking-' + (++thinkingCounter);
+  const container = document.getElementById('messages-container');
+  const div = document.createElement('div');
+  div.id = id;
+  div.className = 'message msg-ai';
+  div.innerHTML = `
+    <div class="msg-header">
+      <div class="msg-avatar avatar-ai">P</div>
+      <span class="msg-name">PedusAgent</span>
+    </div>
+    <div class="thinking">
+      <div class="thinking-dots">
+        <div class="thinking-dot"></div><div class="thinking-dot"></div><div class="thinking-dot"></div>
+      </div>
+      Generando código con Qwen3...
+    </div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return id;
+}
+
+function removeThinking(id) {
+  const el = document.getElementById(id);
+  if(el) el.remove();
+}
+
+function updateStats() {
+  document.getElementById('stat-tokens').textContent = totalTokens.toLocaleString();
+  document.getElementById('stat-lines').textContent = totalLines.toLocaleString();
+  document.getElementById('stat-files').textContent = totalFiles;
+  document.getElementById('req-count').textContent = reqCount + ' requests';
+  document.getElementById('ins-requests').textContent = reqCount;
+  document.getElementById('ins-tokens').textContent = totalTokens.toLocaleString();
+  document.getElementById('tok-used').textContent = totalTokens.toLocaleString();
+  document.getElementById('tok-bar').style.width = Math.min(100, (totalTokens / 128000) * 100) + '%';
+}
+
+function refreshPreview() {
+  const iframe = document.getElementById('preview-iframe');
+  const url = document.getElementById('preview-url');
+  if(!currentCode) return;
+
+  if(currentCode.includes('<html') || currentCode.includes('<!DOCTYPE') || currentCode.includes('<body') || currentCode.includes('<div')) {
+    iframe.srcdoc = currentCode;
+    url.textContent = 'preview://html-output';
+  } else {
+    iframe.srcdoc = `<html><head><style>
+      body{font-family:monospace;background:#1a1a2e;color:#e0e0ff;padding:20px;margin:0;font-size:13px;line-height:1.7;}
+      pre{white-space:pre-wrap;word-break:break-word;}
+      h3{color:#c084fc;margin-top:0;}
+    </style></head><body>
+    <h3>PedusAgent · Output Preview</h3>
+    <pre>${escHtml(currentCode)}</pre></body></html>`;
+    url.textContent = 'preview://code-output';
+  }
+  switchTab('preview');
+}
+
+function copyCode() {
+  if(!currentCode) { showToast('⚠️ No hay código para copiar'); return; }
+  navigator.clipboard.writeText(currentCode).then(() => showToast('📋 Código copiado'));
+}
+
+function downloadCode() {
+  if(!currentCode) { showToast('⚠️ No hay código para descargar'); return; }
+  const lang = document.getElementById('code-lang').textContent;
+  const ext = langExt(lang);
+  const blob = new Blob([currentCode], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'pedusagent_output.' + ext;
+  a.click();
+  showToast('⬇️ Descargando...');
+}
+
+function clearPrompt() {
+  document.getElementById('main-prompt').value = '';
+  document.getElementById('main-prompt').focus();
+}
+
+function insertSnippet(lang) {
+  const snippets = {
+    python: 'Crea un script Python que ',
+    js: 'Escribe una función JavaScript que ',
+    sql: 'Diseña una consulta SQL que ',
+    ts: 'Implementa un módulo TypeScript que '
+  };
+  document.getElementById('main-prompt').value = snippets[lang] || '';
+  document.getElementById('main-prompt').focus();
+}
+
+function useTemplate(type) {
+  const templates = {
+    api: 'Crea una API REST completa en Python con FastAPI que incluya: endpoints CRUD para usuarios, autenticación JWT, validación con Pydantic, base de datos SQLite con SQLAlchemy, manejo de errores y documentación automática.',
+    react: 'Crea un componente React funcional con hooks que implemente un dashboard de métricas con gráficos, tabla de datos filtrable y panel de estadísticas. Usa TailwindCSS para el estilo.',
+    sql: 'Diseña un schema SQL completo para una aplicación de e-commerce con: tablas de usuarios, productos, categorías, pedidos, items de pedido, pagos y reviews. Incluye índices y relaciones.',
+    cli: 'Crea una herramienta CLI en Python con argparse que permita gestionar tareas (añadir, listar, completar, eliminar), con persistencia en JSON y colores en terminal con rich.'
+  };
+  document.getElementById('main-prompt').value = templates[type] || '';
+  switchTab('prompt');
+  showToast('📋 Plantilla cargada');
+}
+
+function newSession() {
+  const sessions = histories.length;
+  histories.push({ title: 'Sesión ' + (sessions+1), code: currentCode, tokens: totalTokens });
+  updateHistoryUI();
+  currentCode = '';
+  totalTokens = 0; totalLines = 0; totalFiles = 0; reqCount = 0;
+  document.getElementById('messages-container').innerHTML = `
+    <div class="message msg-ai">
+      <div class="msg-header">
+        <div class="msg-avatar avatar-ai">P</div>
+        <span class="msg-name">PedusAgent</span>
+      </div>
+      <div class="msg-body">Nueva sesión iniciada. ¿Qué quieres construir? 🚀</div>
+    </div>`;
+  updateStats();
+  switchTab('prompt');
+  showToast('✨ Nueva sesión creada');
+}
+
+function updateHistoryUI() {
+  const list = document.getElementById('history-list');
+  let html = `<div class="history-item active"><div class="history-title">Sesión actual</div><div class="history-meta">ahora · ${reqCount} msgs</div></div>`;
+  histories.slice().reverse().forEach((h,i) => {
+    html += `<div class="history-item"><div class="history-title">${h.title}</div><div class="history-meta">${h.tokens} tokens</div></div>`;
+  });
+  list.innerHTML = html;
+}
+
+function loadHistory(i) {
+  showToast('📂 Sesión cargada');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function updateTemp(v) {
+  settings.temperature = v/10;
+  document.getElementById('temp-val').textContent = settings.temperature.toFixed(1) + (v<4?' · preciso':v<7?' · balance':' · creativo');
+  document.getElementById('ins-temp').textContent = settings.temperature.toFixed(1);
+}
+
+function updateMaxTok(v) {
+  settings.max_tokens = parseInt(v);
+  document.getElementById('maxtok-val').textContent = v + ' tokens';
+  document.getElementById('ins-max').textContent = v;
+}
+
+function toggleSetting(key) {
+  settings[key] = !settings[key];
+  const el = document.getElementById('toggle-'+key);
+  if(el) el.classList.toggle('on', settings[key]);
+}
+
+function setLang(lang) {
+  settings.lang = lang;
+  document.querySelectorAll('[id^="lang-"]').forEach(el => el.style.borderColor='');
+  const el = document.getElementById('lang-'+lang);
+  if(el) el.style.borderColor = 'var(--accent)';
+  showToast('🔧 Lenguaje: ' + lang);
+}
+</script>
+</body>
+</html>
